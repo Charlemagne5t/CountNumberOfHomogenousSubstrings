@@ -1,19 +1,31 @@
 public class Solution {
     public int countHomogenous(String s) {
-        return dfs(s, 0);
-    }
-    public int dfs(String s, int i){
+        int[] memo = new int[s.length()];
         int modulo = 1_000_000_007;
-        if(i == s.length()){
-            return 0;
-        }
         int result = 0;
-        if(i != 0 && s.charAt(i - 1) == s.charAt(i)){
-            result += 1 + dfs(s, i + 1) % modulo;
+        int currentLengthOfHomogenous = 1;
+        for (int i = 1; i < s.length(); i++) {
+            if (s.charAt(i - 1) == s.charAt(i)) {
+                currentLengthOfHomogenous++;
+            } else {
+                if (memo[currentLengthOfHomogenous] == 0) {
+                    memo[currentLengthOfHomogenous] = count(currentLengthOfHomogenous);
+                }
+                result = (result + memo[currentLengthOfHomogenous]) % modulo;
+                currentLengthOfHomogenous = 1;
+            }
         }
-        result += 1 + dfs(s, i + 1) % modulo;
-
-        return result;
-
+        result = (result + count(currentLengthOfHomogenous)) % modulo;
+        return result % modulo;
     }
+    private int count(int n){
+        int modulo = 1_000_000_007;
+        int sum = 0;
+        for (int i = 1; i <= n; i++) {
+            sum = (sum + i) % modulo;
+        }
+
+        return sum% modulo;
+    }
+
 }
